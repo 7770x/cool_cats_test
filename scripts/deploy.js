@@ -4,19 +4,17 @@ async function main() {
 
   const Milk = await ethers.getContractFactory("Milk");
   const milk = await Milk.deploy("MilkRewardToken", "MLK");
-  console.log("Deploying MilkReward to:", milk.address);
   await milk.deployed();
-  console.log("MilkReward token deployed");
+  console.log("MilkReward token deployed to:", milk.address);
 
   const ItemFactory = await ethers.getContractFactory("ItemFactory");
   const itemFactory = await ItemFactory.deploy("hostingsite/{id}.json", milk.address);
-  console.log("Deploying ItemFactory to:", itemFactory.address);
   await itemFactory.deployed();
-  console.log("ItemFactory deployed");
+  console.log("ItemFactory deploy to:", itemFactory.address);
 
   const contractRole = await milk.CONTRACT_ROLE();
   await milk.grantRole(contractRole, itemFactory.address);
-  console.log("Set CONTRACT_ROLE  of itemFactory contract address in the Milk contract");
+  console.log("Set CONTRACT_ROLE of itemFactory contract address in the Milk contract");
 }
 
 main()
