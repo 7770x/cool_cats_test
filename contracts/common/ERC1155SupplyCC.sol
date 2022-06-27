@@ -27,7 +27,8 @@ abstract contract ERC1155SupplyCC is ERC1155 {
      * @dev Indicates whether any token exist with a given id, or not.
      */
     function exists(uint256 id) public view virtual returns (bool) {
-        return ERC1155SupplyCC.totalSupply(id) > 0;
+        //removed ERC1155SupplyCC as no need to name the contract itself calling it from within
+        return totalSupply(id) > 0;
     }
 
     /**
@@ -51,12 +52,13 @@ abstract contract ERC1155SupplyCC is ERC1155 {
 
         if (to == address(0)) {
             for (uint256 i = 0; i < ids.length; ++i) {
-                uint256 id = ids[i];
-                uint256 amount = amounts[i];
-                uint256 supply = _totalSupply[id];
-                require(supply >= amount, "ERC1155: burn amount exceeds totalSupply");
+                //removed unnecessary intermediary asignments to save gas
+                require(
+                    _totalSupply[ids[i]] >= amounts[i],
+                    "ERC1155: burn amount exceeds totalSupply"
+                );
                 unchecked {
-                    _totalSupply[id] = supply - amount;
+                    _totalSupply[ids[i]] = _totalSupply[ids[i]] - amounts[i];
                 }
             }
         }
